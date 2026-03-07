@@ -1,42 +1,216 @@
 body{
-font-family: Arial;
-background:#f4f4f4;
+font-family: 'Segoe UI', sans-serif;
+background:#1e1e2f;
+color:#f2f2f2;
 margin:40px;
 }
 
 h1{
-margin-bottom:10px;
+margin:0;
+color:#ffcb05;
+}
+
+.topbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:16px;
+margin-bottom:20px;
+}
+
+.auth-controls{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+#userInfo{
+font-size:14px;
+color:#c6cae0;
+background:#2f3349;
+border:1px solid #444a65;
+padding:8px 12px;
+border-radius:999px;
+white-space:nowrap;
+max-width:320px;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+#userInfo:empty{
+display:none;
 }
 
 #search{
-padding:8px;
-width:250px;
-margin-bottom:15px;
+padding:10px;
+width:260px;
+margin-bottom:24px;
+border-radius:8px;
+border:none;
+outline:none;
+background:#2c2c3e;
+color:white;
+}
+
+#loginBtn,
+#logoutBtn{
+height:42px;
+border:none;
+border-radius:999px;
+font-size:14px;
+font-weight:600;
+padding:0 16px;
+cursor:pointer;
+transition:transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+#loginBtn{
+color:#f6f8ff;
+background:linear-gradient(135deg, #4e74ff, #5f8bff);
+box-shadow:0 8px 18px rgba(78, 116, 255, 0.35);
+}
+
+#loginBtn:hover{
+transform:translateY(-1px);
+box-shadow:0 12px 22px rgba(78, 116, 255, 0.4);
+}
+
+#logoutBtn{
+color:#ffe5e5;
+background:#7b2d3f;
+box-shadow:0 6px 14px rgba(123, 45, 63, 0.3);
+}
+
+#logoutBtn:hover{
+transform:translateY(-1px);
+background:#8d3348;
 }
 
 table{
 border-collapse:collapse;
 width:100%;
-background:white;
+background:#2a2a3c;
+border-radius:10px;
+overflow:hidden;
 }
 
 th,td{
-padding:8px;
-border:1px solid #ddd;
+padding:10px;
+border-bottom:1px solid #3a3a4a;
 text-align:left;
+vertical-align:top;
 }
 
 th{
-background:#333;
+background:#ef5350;
 color:white;
-cursor:pointer;
 }
 
-tr:nth-child(even){
-background:#f2f2f2;
+tr:hover{
+background:#343448;
 }
 
 .sprite{
-width:80px;
-height:80px;
+width:70px;
+height:70px;
+}
+
+.checkbox-container{
+display:inline-block;
+position:relative;
+cursor:pointer;
+width:26px;
+height:26px;
+}
+
+.checkbox-container input{
+opacity:0;
+width:0;
+height:0;
+}
+
+.checkmark{
+position:absolute;
+top:0;
+left:0;
+height:26px;
+width:26px;
+background:#444;
+border-radius:6px;
+transition:0.2s;
+}
+
+.checkbox-container:hover .checkmark{
+background:#666;
+}
+
+.checkbox-container input:checked ~ .checkmark{
+background:#4caf50;
+}
+
+.checkmark:after{
+content:"";
+position:absolute;
+display:none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after{
+display:block;
+}
+
+.checkbox-container .checkmark:after{
+left:9px;
+top:5px;
+width:6px;
+height:12px;
+border:solid white;
+border-width:0 3px 3px 0;
+transform:rotate(45deg);
+}
+
+.app{
+max-width:1100px;
+margin:auto;
+background:#252535;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+th{
+background:#ef5350;
+color:white;
+cursor:pointer;
+user-select:none;
+}
+
+td label{
+cursor:pointer;
+}
+
+.location-cell{
+max-width:420px;
+font-size:13px;
+line-height:1.35;
+color:#d6dbf8;
+}
+
+@media (max-width: 800px){
+body{
+margin:20px;
+}
+
+.topbar{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.auth-controls{
+width:100%;
+flex-wrap:wrap;
+}
+
+#userInfo{
+max-width:100%;
+}
 }

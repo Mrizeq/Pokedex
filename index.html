@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -12,13 +12,18 @@
 
 <body>
 
-<h1>Pokemon Sword – Galar Dex Tracker</h1>
+<div class="app">
 
-<input id="search" placeholder="Search Pokémon">
-
-<button id="loginBtn">Login with Google</button>
-<button id="logoutBtn" style="display:none;">Logout</button>
+<div class="topbar">
+<h1>Pok&eacute;dex Tracker</h1>
+<div class="auth-controls">
 <span id="userInfo"></span>
+<button id="loginBtn">Continue with Google</button>
+<button id="logoutBtn" style="display:none;">Logout</button>
+</div>
+</div>
+
+<input id="search" placeholder="Search Pok&eacute;mon">
 
 <table id="dex">
 
@@ -28,6 +33,7 @@
 <th>Sprite</th>
 <th>Pokemon</th>
 <th>Evolution</th>
+<th>Location</th>
 <th>Caught</th>
 </tr>
 </thead>

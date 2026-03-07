@@ -25,3 +25,13 @@ let res = await fetch(url);
 return await res.json();
 
 }
+
+export async function fetchSwordLocations(){
+let res = await fetch("./data/sword-locations.json");
+
+if (!res.ok) {
+return {};
+}
+
+return await res.json();
+}

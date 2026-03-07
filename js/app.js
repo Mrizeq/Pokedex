@@ -1,6 +1,5 @@
-import { fetchGalarDex } from "./api.js";
+import { fetchGalarDex, fetchSwordLocations } from "./api.js";
 import { getEvolutionMethod } from "./evolution.js";
-import { loadCaught, saveCaught } from "./storage.js";
 import { capitalize } from "./utils.js";
 import { auth, provider } from "./firebase.js";
 import {
@@ -59,33 +58,24 @@ renderTable(pokemonData);
 });
 
 let pokemonData = [];
-let caught = loadCaught();
+let caught = {};
+let swordLocations = {};
 
 async function loadDex(){
 
-pokemonData = await fetchGalarDex();
+const [dexData, locationsData] = await Promise.all([
+fetchGalarDex(),
+fetchSwordLocations()
+]);
+
+pokemonData = dexData;
+swordLocations = locationsData;
 
 renderTable(pokemonData);
 
 }
 
 async function renderTable(list){
-
-tableBody.innerHTML="";
-
-for (const entry of list){
-
-let id = entry.entry_number;
-
-let name = entry.pokemon_species.name;
-
-let sprite =
-`https://img.pokemondb.net/sprites/home/normal/${name}.png`;
-
-let checked = caught[id] ? "checked" : "";
-
-let evoPromise = getEvolutionMethod(name);
-
 let rows = await Promise.all(list.map(async entry => {
 
 let id = entry.entry_number;
@@ -95,6 +85,7 @@ let sprite =
 `https://img.pokemondb.net/sprites/home/normal/${name}.png`;
 
 let checked = caught[id] ? "checked" : "";
+let location = getLocationText(name);
 
 let evo = await getEvolutionMethod(name);
 
@@ -104,37 +95,41 @@ return `
 <td><img class="sprite" src="${sprite}"></td>
 <td>${capitalize(name)}</td>
 <td>${evo}</td>
-<td><input type="checkbox" data-id="${id}" ${checked}></td>
+<td class="location-cell">${location}</td>
+<td>
+<label class="checkbox-container">
+<input type="checkbox" data-id="${id}" ${checked}>
+<span class="checkmark"></span>
+</label>
+</td>
 </tr>
 `;
 
 }));
 
 tableBody.innerHTML = rows.join("");
-attachCheckboxEvents();
 }
 
-}
-
-function attachCheckboxEvents(){
-
-document.querySelectorAll("input[type=checkbox]").forEach(box=>{
-
-box.addEventListener("change",e=>{
-
+tableBody.addEventListener("change", e => {
+if (e.target.matches('input[type="checkbox"][data-id]')) {
 let id = e.target.dataset.id;
 
 caught[id] = e.target.checked;
 
-if(auth.currentUser){
-
+if (auth.currentUser) {
 saveUserProgress(auth.currentUser.uid);
-
+}
 }
 });
 
-});
+function getLocationText(name){
+let locations = swordLocations[name];
 
+if (!locations || locations.length === 0) {
+return "Not in Sword wild encounters";
+}
+
+return locations.join(", ");
 }
 
 searchInput.addEventListener("input",()=>{
