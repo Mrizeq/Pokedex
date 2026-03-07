@@ -1,4 +1,4 @@
-body{
+﻿body{
 font-family: 'Segoe UI', sans-serif;
 background:#1e1e2f;
 color:#f2f2f2;
@@ -8,6 +8,15 @@ margin:40px;
 h1{
 margin:0;
 color:#ffcb05;
+}
+
+.app{
+max-width:1200px;
+margin:auto;
+background:#252535;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
 
 .topbar{
@@ -41,25 +50,16 @@ text-overflow:ellipsis;
 display:none;
 }
 
-#search{
-padding:10px;
-width:260px;
-margin-bottom:24px;
-border-radius:8px;
-border:none;
-outline:none;
-background:#2c2c3e;
-color:white;
-}
-
 #loginBtn,
-#logoutBtn{
-height:42px;
+#logoutBtn,
+#retryBtn,
+.filter-btn{
+height:40px;
 border:none;
 border-radius:999px;
 font-size:14px;
 font-weight:600;
-padding:0 16px;
+padding:0 14px;
 cursor:pointer;
 transition:transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
@@ -70,28 +70,123 @@ background:linear-gradient(135deg, #4e74ff, #5f8bff);
 box-shadow:0 8px 18px rgba(78, 116, 255, 0.35);
 }
 
-#loginBtn:hover{
-transform:translateY(-1px);
-box-shadow:0 12px 22px rgba(78, 116, 255, 0.4);
-}
-
 #logoutBtn{
 color:#ffe5e5;
 background:#7b2d3f;
 box-shadow:0 6px 14px rgba(123, 45, 63, 0.3);
 }
 
-#logoutBtn:hover{
+#retryBtn{
+color:#f6f8ff;
+background:#4757a8;
+}
+
+#loginBtn:hover,
+#logoutBtn:hover,
+#retryBtn:hover,
+.filter-btn:hover{
 transform:translateY(-1px);
-background:#8d3348;
+}
+
+.controls{
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+gap:12px;
+margin-bottom:10px;
+}
+
+#search{
+padding:10px 12px;
+width:280px;
+border-radius:8px;
+border:1px solid #3f4768;
+outline:none;
+background:#2c2c3e;
+color:white;
+}
+
+#search:focus,
+.filter-btn:focus,
+.sort-btn:focus,
+.location-toggle:focus,
+#loginBtn:focus,
+#logoutBtn:focus,
+#retryBtn:focus,
+input[type="checkbox"]:focus + .checkmark{
+outline:2px solid #9fb2ff;
+outline-offset:2px;
+}
+
+.filters{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.filter-btn{
+height:34px;
+padding:0 12px;
+background:#30354f;
+color:#d9def6;
+border:1px solid #495070;
+}
+
+.filter-btn.active{
+background:#5169e8;
+border-color:#6b81f3;
+color:white;
+}
+
+.table-status{
+margin:8px 0 12px;
+color:#bfc6ea;
+font-size:14px;
+}
+
+.error-state{
+margin:0 0 12px;
+padding:10px 12px;
+border-radius:10px;
+background:#4d2a34;
+border:1px solid #814454;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+}
+
+.error-state[hidden]{
+display:none;
+}
+
+.error-state p,
+.empty-state{
+margin:0;
+}
+
+.empty-state[hidden]{
+display:none;
+}
+
+.empty-state{
+margin:0 0 12px;
+color:#cfd5f4;
+font-size:14px;
+}
+
+.table-wrap{
+overflow:auto;
+border-radius:10px;
+border:1px solid #3a3f5a;
 }
 
 table{
-border-collapse:collapse;
+border-collapse:separate;
+border-spacing:0;
 width:100%;
+min-width:1080px;
 background:#2a2a3c;
-border-radius:10px;
-overflow:hidden;
 }
 
 th,td{
@@ -101,9 +196,35 @@ text-align:left;
 vertical-align:top;
 }
 
-th{
+thead th{
+position:sticky;
+top:0;
+z-index:2;
 background:#ef5350;
 color:white;
+}
+
+.sort-btn{
+background:transparent;
+border:none;
+color:white;
+font:inherit;
+font-weight:700;
+cursor:pointer;
+padding:0;
+}
+
+.sort-btn.active::after{
+margin-left:6px;
+font-size:11px;
+}
+
+.sort-btn.active.asc::after{
+content:"▲";
+}
+
+.sort-btn.active.desc::after{
+content:"▼";
 }
 
 tr:hover{
@@ -127,6 +248,7 @@ height:26px;
 opacity:0;
 width:0;
 height:0;
+position:absolute;
 }
 
 .checkmark{
@@ -168,26 +290,6 @@ border-width:0 3px 3px 0;
 transform:rotate(45deg);
 }
 
-.app{
-max-width:1100px;
-margin:auto;
-background:#252535;
-padding:30px;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-}
-
-th{
-background:#ef5350;
-color:white;
-cursor:pointer;
-user-select:none;
-}
-
-td label{
-cursor:pointer;
-}
-
 .location-cell{
 max-width:420px;
 font-size:13px;
@@ -222,6 +324,33 @@ cursor:pointer;
 background:#303754;
 }
 
+.skeleton-row td{
+height:34px;
+}
+
+.skeleton-box{
+display:inline-block;
+height:14px;
+border-radius:6px;
+background:linear-gradient(90deg, #3a3f58 25%, #464d69 50%, #3a3f58 75%);
+background-size:200% 100%;
+animation:skeleton-shimmer 1.2s infinite linear;
+}
+
+.w-id{ width:28px; }
+.w-sprite{ width:56px; height:56px; border-radius:8px; }
+.w-name{ width:120px; }
+.w-evo{ width:180px; }
+.w-stone{ width:90px; }
+.w-obtain{ width:160px; }
+.w-location{ width:260px; }
+.w-check{ width:26px; height:26px; }
+
+@keyframes skeleton-shimmer{
+0%{ background-position:200% 0; }
+100%{ background-position:-200% 0; }
+}
+
 @media (max-width: 800px){
 body{
 margin:20px;
@@ -239,5 +368,14 @@ flex-wrap:wrap;
 
 #userInfo{
 max-width:100%;
+}
+
+.controls{
+flex-direction:column;
+align-items:stretch;
+}
+
+#search{
+width:100%;
 }
 }

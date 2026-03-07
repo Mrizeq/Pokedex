@@ -4,76 +4,111 @@ import { capitalize } from "./utils.js";
 const evolutionCache = {};
 
 export async function getEvolutionMethod(pokemonName){
-let info = await getEvolutionInfo(pokemonName);
+const info = await getEvolutionInfo(pokemonName);
 return info.method;
 }
 
 export async function getEvolutionInfo(pokemonName){
-let species = await fetchSpecies(pokemonName);
-let chainUrl = species.evolution_chain.url;
+const species = await fetchSpecies(pokemonName);
+const chainUrl = species.evolution_chain.url;
 
 let evoData;
-
-if(evolutionCache[chainUrl]){
+if (evolutionCache[chainUrl]) {
 evoData = evolutionCache[chainUrl];
-}else{
+} else {
 evoData = await fetchEvolutionChain(chainUrl);
 evolutionCache[chainUrl] = evoData;
 }
 
-return parseEvolution(evoData.chain, pokemonName);
+return parseEvolution(chainUrl, evoData.chain, pokemonName);
 }
 
-function parseEvolution(chain, target){
-let method = "";
-let stone = "-";
+function parseEvolution(chainUrl, chain, target){
+const result = {
+chainUrl,
+method: "Unknown",
+stone: "-",
+forwardTrigger: "unknown",
+isFinalEvolution: false,
+parentName: null,
+parentMethod: null,
+parentStone: "-",
+parentTrigger: null
+};
 
-function search(node){
-let name = node.species.name;
+function walk(node, parentNode, parentDetails){
+if (node.species.name === target) {
+result.parentName = parentNode ? formatPokemonName(parentNode.species.name) : null;
 
-if(name === target){
-if(node.evolves_to.length === 0){
-method = "Final evolution";
+if (parentDetails) {
+const parentMethod = formatForwardMethod(parentDetails, formatPokemonName(node.species.name));
+result.parentMethod = parentMethod.method;
+result.parentStone = parentMethod.stone;
+result.parentTrigger = parentMethod.trigger;
+}
+
+if (node.evolves_to.length === 0) {
+result.method = "Final evolution";
+result.forwardTrigger = "none";
+result.isFinalEvolution = true;
 return;
 }
 
-let evo = node.evolves_to[0];
-let details = evo.evolution_details[0];
-let evoName = formatPokemonName(evo.species.name);
-
-if(!details){
-method = "Unknown";
-return;
+const nextNode = node.evolves_to[0];
+const details = nextNode.evolution_details[0];
+const forwardMethod = formatForwardMethod(details, formatPokemonName(nextNode.species.name));
+result.method = forwardMethod.method;
+result.stone = forwardMethod.stone;
+result.forwardTrigger = forwardMethod.trigger;
+result.isFinalEvolution = false;
 }
 
-if(details.item){
-method = details.item.name + " → " + evoName;
-stone = details.item.name.includes("stone")
-? formatItemName(details.item.name)
-: "-";
-}
-
-else if(details.min_level){
-method = "Level " + details.min_level + " → " + evoName;
-}
-
-else if(details.trigger.name === "trade"){
-method = "Trade → " + evoName;
-}
-
-else{
-method = details.trigger.name + " → " + evoName;
+for (const child of node.evolves_to) {
+walk(child, node, child.evolution_details[0]);
 }
 }
 
-node.evolves_to.forEach(search);
+walk(chain, null, null);
+
+return result;
 }
 
-search(chain);
+function formatForwardMethod(details, nextName){
+if (!details) {
+return { method: "Unknown", stone: "-", trigger: "unknown" };
+}
 
+if (details.item) {
+const itemName = formatItemName(details.item.name);
+const isStone = details.item.name.includes("stone");
 return {
-method: capitalize(method),
-stone: stone
+method: `${itemName} → ${nextName}`,
+stone: isStone ? itemName : "-",
+trigger: isStone ? "stone" : "item"
+};
+}
+
+if (details.min_level) {
+return {
+method: `Level ${details.min_level} → ${nextName}`,
+stone: "-",
+trigger: "level-up"
+};
+}
+
+if (details.trigger?.name === "trade") {
+return {
+method: `Trade → ${nextName}`,
+stone: "-",
+trigger: "trade"
+};
+}
+
+const triggerName = details.trigger?.name ? formatItemName(details.trigger.name) : "Unknown";
+return {
+method: `${triggerName} → ${nextName}`,
+stone: "-",
+trigger: details.trigger?.name || "unknown"
 };
 }
 

@@ -35,3 +35,13 @@ return {};
 
 return await res.json();
 }
+
+export async function fetchRaidSpecies(){
+let res = await fetch("./data/sword-raid-species.json");
+
+if (!res.ok) {
+return [];
+}
+
+return await res.json();
+}

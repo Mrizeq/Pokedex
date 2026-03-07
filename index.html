@@ -23,25 +23,44 @@
 </div>
 </div>
 
-<input id="search" placeholder="Search Pok&eacute;mon">
+<div class="controls" aria-label="Table controls">
+<input id="search" placeholder="Search Pok&eacute;mon" aria-label="Search Pokemon">
+<div class="filters" role="group" aria-label="Quick filters">
+<button type="button" class="filter-btn active" data-filter="all">All</button>
+<button type="button" class="filter-btn" data-filter="caught">Caught</button>
+<button type="button" class="filter-btn" data-filter="not-caught">Not Caught</button>
+<button type="button" class="filter-btn" data-filter="has-stone">Has Stone</button>
+<button type="button" class="filter-btn" data-filter="final-evo">Final Evo</button>
+</div>
+</div>
 
+<p id="tableStatus" class="table-status" role="status" aria-live="polite">Loading Pok&eacute;dex data...</p>
+<div id="errorState" class="error-state" hidden>
+<p>Could not load data. Please try again.</p>
+<button id="retryBtn" type="button">Retry</button>
+</div>
+<p id="emptyState" class="empty-state" hidden>No Pok&eacute;mon match your current filters.</p>
+
+<div class="table-wrap">
 <table id="dex">
 
 <thead>
 <tr>
-<th>#</th>
+<th><button class="sort-btn" type="button" data-sort="id">#</button></th>
 <th>Sprite</th>
-<th>Pokemon</th>
-<th>Evolution</th>
-<th>Stone</th>
+<th><button class="sort-btn" type="button" data-sort="name">Pokemon</button></th>
+<th><button class="sort-btn" type="button" data-sort="evolution">Evolution</button></th>
+<th><button class="sort-btn" type="button" data-sort="stone">Stone</button></th>
+<th><button class="sort-btn" type="button" data-sort="obtain">Obtain</button></th>
 <th>Location</th>
-<th>Caught</th>
+<th><button class="sort-btn" type="button" data-sort="caught">Caught</button></th>
 </tr>
 </thead>
 
 <tbody></tbody>
 
 </table>
+</div>
 
 <script type="module" src="js/app.js"></script>
 
