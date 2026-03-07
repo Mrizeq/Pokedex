@@ -195,6 +195,33 @@ line-height:1.35;
 color:#d6dbf8;
 }
 
+.location-content{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+}
+
+.location-summary{
+flex:1 1 auto;
+min-width:200px;
+}
+
+.location-toggle{
+flex:0 0 auto;
+align-self:flex-start;
+background:transparent;
+border:1px solid #4a5172;
+color:#9fb2ff;
+border-radius:999px;
+padding:2px 8px;
+font-size:12px;
+cursor:pointer;
+}
+
+.location-toggle:hover{
+background:#303754;
+}
+
 @media (max-width: 800px){
 body{
 margin:20px;
