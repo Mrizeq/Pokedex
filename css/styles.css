@@ -379,59 +379,28 @@ align-items:stretch;
 width:100%;
 }
 
-/* Keep identity columns visible while horizontally scrolling the table. */
-th:nth-child(1),
-td:nth-child(1){
-min-width:56px;
-}
-
-th:nth-child(2),
-td:nth-child(2){
-min-width:92px;
-}
-
-th:nth-child(3),
-td:nth-child(3){
-min-width:170px;
-}
-
-th:nth-child(1),
-td:nth-child(1),
-th:nth-child(2),
-td:nth-child(2),
-th:nth-child(3),
-td:nth-child(3){
+/* Pin Caught column on the right so checking stays accessible. */
+th:nth-child(8),
+td:nth-child(8){
 position:sticky;
-z-index:3;
+right:0;
+z-index:4;
 background:#2a2a3c;
+min-width:84px;
+text-align:center;
 }
 
-thead th:nth-child(1),
-thead th:nth-child(2),
-thead th:nth-child(3){
+thead th:nth-child(8){
 background:#ef5350;
-z-index:5;
+z-index:6;
+box-shadow:-6px 0 10px rgba(0, 0, 0, 0.22);
 }
 
-th:nth-child(1),
-td:nth-child(1){
-left:0;
+td:nth-child(8){
+box-shadow:-6px 0 10px rgba(0, 0, 0, 0.22);
 }
 
-th:nth-child(2),
-td:nth-child(2){
-left:56px;
-}
-
-th:nth-child(3),
-td:nth-child(3){
-left:148px;
-box-shadow:6px 0 10px rgba(0, 0, 0, 0.22);
-}
-
-tr:hover td:nth-child(1),
-tr:hover td:nth-child(2),
-tr:hover td:nth-child(3){
+tr:hover td:nth-child(8){
 background:#343448;
 }
 }
