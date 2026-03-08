@@ -349,6 +349,7 @@ animation:skeleton-shimmer 1.2s infinite linear;
 .w-evo{ width:180px; }
 .w-stone{ width:90px; }
 .w-obtain{ width:160px; }
+.w-breed{ width:140px; }
 .w-location{ width:260px; }
 .w-check{ width:26px; height:26px; }
 
@@ -440,8 +441,8 @@ gap:10px;
 }
 
 /* Fallback-friendly mobile behavior: keep caught toggle near Pokemon name. */
-th:nth-child(8),
-td:nth-child(8){
+th:nth-child(9),
+td:nth-child(9){
 display:none;
 }
 

@@ -297,6 +297,7 @@ return;
 }
 
 const rows = getVisibleRows();
+const caughtNamesByChain = getCaughtNamesByChain();
 renderTableStatus(rows.length);
 
 emptyState.hidden = rows.length !== 0;
@@ -304,6 +305,7 @@ emptyState.hidden = rows.length !== 0;
 const html = rows.map(row => {
 const checked = caught[row.id] ? "checked" : "";
 const isExpanded = expandedLocations.has(String(row.id));
+const breedFrom = getBreedFromText(row, caughtNamesByChain);
 
 return `
 <tr>
@@ -321,6 +323,7 @@ return `
 <td>${escapeHtml(row.evolution.method)}</td>
 <td>${escapeHtml(row.stone)}</td>
 <td>${escapeHtml(row.obtain)}</td>
+<td>${escapeHtml(breedFrom)}</td>
 <td class="location-cell">
 <div
 class="location-content"
@@ -357,6 +360,43 @@ ${isExpanded ? "Show less" : `+${row.location.hiddenCount} more`}
 tableBody.innerHTML = html;
 }
 
+function getCaughtNamesByChain(){
+const byChain = new Map();
+
+for (const row of dexRows) {
+if (!caught[row.id] || !row.evolution.chainUrl) {
+continue;
+}
+
+if (!byChain.has(row.evolution.chainUrl)) {
+byChain.set(row.evolution.chainUrl, []);
+}
+
+byChain.get(row.evolution.chainUrl).push(row.nameLabel);
+}
+
+return byChain;
+}
+
+function getBreedFromText(row, caughtNamesByChain){
+if (!row.evolution.chainUrl || row.evolution.parentName !== null || caught[row.id]) {
+return "-";
+}
+
+const breeders = (caughtNamesByChain.get(row.evolution.chainUrl) || [])
+.filter(name => name.toLowerCase() !== row.name);
+
+if (breeders.length === 0) {
+return "-";
+}
+
+if (breeders.length <= 2) {
+return breeders.join(", ");
+}
+
+return `${breeders.slice(0, 2).join(", ")} +${breeders.length - 2}`;
+}
+
 function renderLoadingRows(){
 const placeholders = Array.from({ length: 12 }).map(() => `
 <tr class="skeleton-row">
@@ -366,6 +406,7 @@ const placeholders = Array.from({ length: 12 }).map(() => `
 <td><span class="skeleton-box w-evo"></span></td>
 <td><span class="skeleton-box w-stone"></span></td>
 <td><span class="skeleton-box w-obtain"></span></td>
+<td><span class="skeleton-box w-breed"></span></td>
 <td><span class="skeleton-box w-location"></span></td>
 <td><span class="skeleton-box w-check"></span></td>
 </tr>
