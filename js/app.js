@@ -228,7 +228,8 @@ case "breedable-missing":
 rows = rows.filter(row =>
 !caught[row.id] &&
 row.evolution.chainUrl &&
-caughtByChain.has(row.evolution.chainUrl)
+ row.evolution.parentName === null &&
+ caughtByChain.has(row.evolution.chainUrl)
 );
 break;
 default:
