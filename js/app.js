@@ -205,6 +205,7 @@ obtain
 
 function getVisibleRows(){
 let rows = [...dexRows];
+const caughtByChain = getCaughtByChain();
 
 if (uiState.search) {
 rows = rows.filter(row => row.name.includes(uiState.search));
@@ -223,6 +224,13 @@ break;
 case "final-evo":
 rows = rows.filter(row => row.evolution.isFinalEvolution);
 break;
+case "breedable-missing":
+rows = rows.filter(row =>
+!caught[row.id] &&
+row.evolution.chainUrl &&
+caughtByChain.has(row.evolution.chainUrl)
+);
+break;
 default:
 break;
 }
@@ -230,6 +238,18 @@ break;
 rows.sort((a, b) => compareRows(a, b, uiState.sortBy, uiState.sortDir));
 
 return rows;
+}
+
+function getCaughtByChain(){
+const set = new Set();
+
+for (const row of dexRows) {
+if (caught[row.id] && row.evolution.chainUrl) {
+set.add(row.evolution.chainUrl);
+}
+}
+
+return set;
 }
 
 function compareRows(a, b, sortBy, sortDir){
