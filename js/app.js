@@ -288,7 +288,15 @@ return `
 <tr>
 <td>${row.id}</td>
 <td><img class="sprite" src="${row.sprite}" alt="${row.nameLabel} sprite"></td>
-<td>${row.nameLabel}</td>
+<td class="pokemon-cell">
+<div class="pokemon-main">
+<span>${row.nameLabel}</span>
+<label class="checkbox-container mobile-caught" aria-label="Mark ${row.nameLabel} as caught">
+<input type="checkbox" data-id="${row.id}" ${checked}>
+<span class="checkmark"></span>
+</label>
+</div>
+</td>
 <td>${escapeHtml(row.evolution.method)}</td>
 <td>${escapeHtml(row.stone)}</td>
 <td>${escapeHtml(row.obtain)}</td>

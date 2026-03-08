@@ -290,6 +290,10 @@ border-width:0 3px 3px 0;
 transform:rotate(45deg);
 }
 
+.mobile-caught{
+display:none;
+}
+
 .location-cell{
 max-width:420px;
 font-size:13px;
@@ -379,28 +383,20 @@ align-items:stretch;
 width:100%;
 }
 
-/* Pin Caught column on the right so checking stays accessible. */
+.pokemon-main{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+}
+
+/* Fallback-friendly mobile behavior: keep caught toggle near Pokemon name. */
 th:nth-child(8),
 td:nth-child(8){
-position:sticky;
-right:0;
-z-index:4;
-background:#2a2a3c;
-min-width:84px;
-text-align:center;
+display:none;
 }
 
-thead th:nth-child(8){
-background:#ef5350;
-z-index:6;
-box-shadow:-6px 0 10px rgba(0, 0, 0, 0.22);
-}
-
-td:nth-child(8){
-box-shadow:-6px 0 10px rgba(0, 0, 0, 0.22);
-}
-
-tr:hover td:nth-child(8){
-background:#343448;
+.mobile-caught{
+display:inline-block;
 }
 }
